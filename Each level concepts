@@ -1,4 +1,236 @@
 Level 0->1
   cat to view the data
-Level 1->2
+
+Level 1->2:
+
+Path References
+
+./ → current directory
+
+/home/bandit1/- → absolute path to the file
+
+These help bypass the confusion caused by special characters.
+
+Level 2->3:
+*Quote the filename (" " or ' ')
+*Escape spaces with \
+* Or let the shell handle it via tab completion
+
+Next password is in hidden file called inhere
+
+Level 3->4:
+*ls --> How many files are there (it will show the hidden file name called inhere)
+* cd inhere
+* ls -a ?
+   Hidden files begin with . (like .secret).
+       ls → shows only normal files.
+       ls -a → shows all files, including hidden ones.
+
+Level 4->5 (reset)
+* It is given human readable file so go inside the file 
+* check the all the file what type of format it contains
+   1) Human-readable files are plain text (ASCII).
+   2) Binary files contain non-text data (machine code, compressed data, etc.).
+
+file filename--> what type of content it contains (like that we should put and check fo it)
+
+file ./* --> check for all the file which type of context data it has?
+
+Level 5->6 
+
+Pre-requsites:
+File properties:
+
+1) Use file to check if a file is human-readable (ASCII text).
+2) Use du -b or ls -l to check the file size.
+3) Use ls -l to check permissions (executable files have x in their permission string).
+
+finally what i have to do :
+  --> ind / -type f -size 33c -user bandit7 -group bandit6 2>/dev/null
+
+what is the mean of 2>/dev/null
+In linux there are 2 Outputs 
+1) stdout
+2) stderr
+
+             find /
+
+                │
+      ┌─────────┴──────────┐
+      │                    │
+      ▼                    ▼
+
+stdout (1)             stderr (2)
+
+Found file             Permission denied
+File names             Errors
+
+      │                    │
+      ▼                    ▼
+
+Terminal             /dev/null
+
+Visible             Disappears 🕳️
+
+Level 6->7:
+
+bandit7@bandit:~$ ls
+bandit7@bandit:~$ cat data.txt |grep millionth
+millionth       VR1ljMayciFxbnUokuQmJFw6QC9VKtub
+bandit7@bandit:~$ grep millionth data.txt
+millionth       VR1ljMayciFxbnUokuQmJFw6QC9VKtub
+bandit7@bandit:~$
+
+CONCEPTS
+
+🔑 uniq
+Purpose: Removes duplicate lines from text.
+
+Important detail: It only removes consecutive duplicates.
+
+Example:
+
+bash
+cat file.txt
+Output:
+
+Code
+apple
+apple
+banana
+banana
+cherry
+Now run:
+
+bash
+uniq file.txt
+Output:
+
+Code
+apple
+banana
+cherry
+Often combined with sort first:
+
+bash
+sort file.txt | uniq
+→ sorts the file, then removes duplicates.
+
+🔑 base64
+Purpose: Encode or decode data in Base64 format (a way of representing binary data as text).
+
+Why it matters: Sometimes passwords or hidden strings are stored in Base64. You’ll need to decode them.
+
+Example:
+
+bash
+echo "hello" | base64
+Output:
+
+Code
+aGVsbG8K
+Decode it back:
+
+bash
+echo "aGVsbG8K" | base64 --decode
+Output:
+
+Code
+hello
+🧠 What you learn from this level
+Searching: grep helps you find specific words in files.
+
+Filtering duplicates: uniq helps clean up repeated lines.
+
+Encoding/decoding: base64 helps you handle encoded text.
+
+Efficiency: Sometimes one command is enough (grep), but knowing the others prepares you for trickier levels.
+
+Level 8-> 9
+
+ sort data.txt | uniq -u
+sort data.txt → sorts all lines alphabetically.
+
+uniq -u → shows only lines that occur once (unique).
+
+Level 9->10 :
+Understand the file
+
+data.txt is mostly non‑readable binary data.
+
+But inside it, there are some human‑readable text fragments.
+
+One of those fragments is the password, and it comes after a bunch of = signs.
+
+Tools you’ll use
+
+strings → extracts human‑readable text from binary files.
+
+grep → searches for specific patterns (like ===).
+
+Pipes (|) → connect commands together.
+
+Step-by-step solution
+
+bash
+strings data.txt | grep '='
+strings data.txt → pulls out all readable text from the binary file.
+
+grep '=' → filters only lines that contain = characters.
+
+Among those, look for the line with several = followed by a readable password.
+
+You’ll see something like
+
+Level 11->12
+
+1)The file data.txt contains text where all letters have been rotated by 13 positions.
+This is called ROT13 (a simple substitution cipher).
+Your task: decode it to reveal the password.
+
+Solution:
+Step‑by‑Step Approach
+Check the file contents
+
+bash
+cat data.txt
+You’ll see text that looks readable but scrambled (letters shifted).
+
+Decode with tr
+The tr command can translate characters. For ROT13:
+
+bash
+cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+tr 'A-Za-z' 'N-ZA-Mn-za-m' → shifts each letter by 13 places.
+
+Uppercase and lowercase are both handled.
+
+This will print the decoded text.
+
+Get the password
+The decoded output is the password for Level 12.
+
+🧠 What You Learn in This Level
+ROT13 basics: A simple cipher that rotates letters by 13.
+
+Using tr: A powerful tool to translate or substitute characters.
+
+Pattern recognition: When text looks scrambled but readable, ROT13 is a common trick.
+
+Command chaining: Using cat + tr together to transform file contents.
+
+✅ Beginner Summary
+data.txt is ROT13 encoded.
+
+Run:
+
+bash
+cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+The decoded text is your password.
+
+👉 So your approach is: use tr to apply ROT13 decoding.
+ROT13 METHOD APPROUCH 
+
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+NOPQRSTUVWXYZABCDEFGHIJKLM
 
